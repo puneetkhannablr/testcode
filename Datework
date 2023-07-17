@@ -1,59 +1,61 @@
-import java.io.BufferedReader;
-import java.io.FileReader;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-public class Main {
+public class ExcelDateReader {
     public static void main(String[] args) {
-        String csvFile = "path/to/your/csv/file.csv";
-        String line;
-        String csvSeparator = ",";
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        
-        try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
-            // Read the header line
-            line = br.readLine();
-            
-            // Read and process each subsequent line
-            while ((line = br.readLine()) != null) {
-                String[] data = line.split(csvSeparator);
-                String dateString = data[0];  // Assuming date is in the first column
-                
-                try {
+        String filePath = "path/to/your/file.xlsx";
+        String sheetName = "Sheet1";
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        try (FileInputStream fis = new FileInputStream(filePath);
+             Workbook workbook = new XSSFWorkbook(fis)) {
+
+            Sheet sheet = workbook.getSheet(sheetName);
+
+            // Assuming the columns are in the order: date, count, feature, column3, column6
+            int dateColumnIndex = 0;
+            int countColumnIndex = 1;
+            int featureColumnIndex = 2;
+
+            for (Row row : sheet) {
+                Cell dateCell = row.getCell(dateColumnIndex);
+                Cell countCell = row.getCell(countColumnIndex);
+                Cell featureCell = row.getCell(featureColumnIndex);
+
+                if (dateCell != null && dateCell.getCellType() == CellType.STRING) {
+                    String dateString = dateCell.getStringCellValue();
                     Date date = dateFormat.parse(dateString);
+
+                    // Calculate the week number and start of the week
                     Calendar calendar = Calendar.getInstance();
                     calendar.setTime(date);
-                    
                     int weekOfYear = calendar.get(Calendar.WEEK_OF_YEAR);
-                    int year = calendar.get(Calendar.YEAR);
-                    
-                    // Get the start of the week
-                    calendar.clear();
-                    calendar.set(Calendar.YEAR, year);
                     calendar.set(Calendar.WEEK_OF_YEAR, weekOfYear);
                     calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
-                    
                     Date startOfWeek = calendar.getTime();
-                    
+
+                    // Retrieve the count and feature values
+                    int count = (countCell != null && countCell.getCellType() == CellType.NUMERIC) ?
+                            (int) countCell.getNumericCellValue() : 0;
+                    String feature = (featureCell != null && featureCell.getCellType() == CellType.STRING) ?
+                            featureCell.getStringCellValue() : "";
+
                     System.out.println("Date: " + date);
-                    System.out.println("Week of the year: " + weekOfYear);
-                    System.out.println("Start of the week: " + startOfWeek);
-                    
-                    // Perform further processing with count, feature, and other columns if needed
-                    // int count = Integer.parseInt(data[1]);
-                    // String feature = data[2];
-                    // ...
-                    
-                    System.out.println("------------------------------------");
-                    
-                } catch (ParseException e) {
-                    e.printStackTrace();
+                    System.out.println("Count: " + count);
+                    System.out.println("Feature: " + feature);
+                    System.out.println("Week Number: " + weekOfYear);
+                    System.out.println("Start of Week: " + startOfWeek);
+                    System.out.println("--------------------------------");
                 }
             }
-        } catch (IOException e) {
+        } catch (IOException | ParseException e) {
             e.printStackTrace();
         }
     }
