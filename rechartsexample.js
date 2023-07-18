@@ -37,3 +37,14 @@ const MultiLineChart = () => {
 };
 
 export default MultiLineChart;
+
+const combinedData = [];
+const product1Data = jsonData.product1Data;
+const product2Data = jsonData.product2Data;
+
+for (let i = 0; i < product1Data.length; i++) {
+  combinedData.push({
+    date: product1Data[i].date,
+    product1: product1Data[i].salesCount,
+    product2: product2Data[i].salesCount,
+  });
