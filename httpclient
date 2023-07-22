@@ -50,3 +50,9 @@ public class TimeZoneHttpClientExample {
         return httpClient;
     }
 }
+
+
+ ZonedDateTime startTime = ZonedDateTime.ofInstant(Instant.parse("2023-07-22T00:00:00Z"), ZoneId.of("UTC"));
+        ZonedDateTime endTime = ZonedDateTime.ofInstant(Instant.parse("2023-07-22T23:59:59Z"), ZoneId.of("UTC"));
+        String query = "search index=your_index earliest=" + startTime + " latest=" + endTime;
+        String fullUrl = splunkHost + "/services/search/jobs/export?search=" + query;
