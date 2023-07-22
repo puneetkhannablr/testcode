@@ -1,0 +1,52 @@
+import org.apache.http.HttpHost;
+import org.apache.http.HttpRequest;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.conn.DefaultHttpClientConnectionOperator;
+import org.apache.http.protocol.HttpContext;
+
+import java.io.IOException;
+import java.util.TimeZone;
+
+public class TimeZoneHttpClientExample {
+
+    public static void main(String[] args) {
+        // Set the time zone to be used by the HttpClient
+        String timeZoneId = "America/New_York"; // Replace with your desired time zone ID
+        TimeZone timeZone = TimeZone.getTimeZone(timeZoneId);
+        HttpClient httpClient = createHttpClientWithTimeZone(timeZone);
+
+        // Make an HTTP request
+        String url = "https://www.example.com"; // Replace with the URL you want to request
+        HttpGet httpGet = new HttpGet(url);
+        try {
+            HttpResponse response = httpClient.execute(httpGet);
+            // Handle the response as needed
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            // Close the HttpClient when done
+            if (httpClient instanceof CloseableHttpClient) {
+                try {
+                    ((CloseableHttpClient) httpClient).close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private static HttpClient createHttpClientWithTimeZone(TimeZone timeZone) {
+        DefaultHttpClientConnectionOperator connectionOperator = new DefaultHttpClientConnectionOperator(
+                DefaultHttpClientConnectionOperator.INSTANCE.getSocketFactoryRegistry(),
+                timeZone
+        );
+        CloseableHttpClient httpClient = HttpClients.custom()
+                .setConnectionOperator(connectionOperator)
+                .build();
+        return httpClient;
+    }
+}
