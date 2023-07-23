@@ -1,2 +1,5 @@
-jackson:
-    time-zone: UTC
+@PostConstruct
+    public void init() {
+        // Set the default time zone to UTC
+        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+    }
