@@ -1,0 +1,36 @@
+90th percentile
+
+
+import java.util.Arrays;
+
+public class PercentileCalculator {
+
+    public static long find9thPercentile(long[] arr) {
+        // Step 1: Sort the array
+        Arrays.sort(arr);
+
+        // Step 2: Calculate the index for the 9th percentile
+        double percentileIndex = 0.09 * (arr.length - 1);
+
+        // Step 3: Check if the index is an integer
+        if (percentileIndex % 1 == 0) {
+            // If the index is an integer, return the corresponding value directly
+            return arr[(int) percentileIndex];
+        } else {
+            // If the index is not an integer, interpolate the value between two data points
+            int lowerIndex = (int) percentileIndex;
+            int upperIndex = lowerIndex + 1;
+            long lowerValue = arr[lowerIndex];
+            long upperValue = arr[upperIndex];
+            double interpolationFactor = percentileIndex - lowerIndex;
+            return (long) (lowerValue + interpolationFactor * (upperValue - lowerValue));
+        }
+    }
+
+    public static void main(String[] args) {
+        // Example usage:
+        long[] data = {1L, 5L, 10L, 15L, 20L, 25L, 30L, 35L, 40L, 45L};
+        long ninthPercentile = find9thPercentile(data);
+        System.out.println("9th percentile value: " + ninthPercentile);
+    }
+}
