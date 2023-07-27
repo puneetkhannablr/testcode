@@ -88,3 +88,14 @@ const App = () => {
 };
 
 export default App;
+
+
+ const uniqueMonths = [];
+  const monthSet = new Set();
+  allMonths.forEach((month) => {
+    const monthName = d3.timeFormat("%b")(month);
+    if (!monthSet.has(monthName)) {
+      monthSet.add(monthName);
+      uniqueMonths.push(month);
+    }
+  });
