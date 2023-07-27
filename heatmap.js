@@ -101,7 +101,9 @@ export default App;
   });
 
 
-const colorScale = d3
+
+ // Create a scale for the color of the heatmap
+  const colorScale = d3
     .scaleSequential()
-    .domain([0, d3.max(heatmapData, (d) => d.count)])
-    .interpolator((t) => interpolateGreens(0.5 + t * 0.5));
+    .domain([1, d3.max(heatmapData, (d) => d.count)])
+    .interpolator((t) => (d) => d.count === 0 ? "#ffffff" : interpolateGreens(t * 0.7));
