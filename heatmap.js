@@ -111,3 +111,12 @@ export default App;
 
 
 heatmapData.sort((a, b) => a.date - b.date);
+
+
+
+// Custom query to get the count of incidents by week basis
+    @Query("SELECT DATE_TRUNC('week', i.date) AS weekStart, SUM(i.count) AS totalCount " +
+            "FROM Incident i " +
+            "GROUP BY DATE_TRUNC('week', i.date) " +
+            "ORDER BY weekStart")
+    List<WeeklyIncidentCount> getCountOfIncidentsByWeek();
