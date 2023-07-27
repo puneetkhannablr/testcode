@@ -107,3 +107,7 @@ export default App;
     .scaleSequential()
     .domain([1, d3.max(heatmapData, (d) => d.count)])
     .interpolator((t) => (d) => d.count === 0 ? "#ffffff" : interpolateGreens(t * 0.7));
+
+
+
+heatmapData.sort((a, b) => a.date - b.date);
