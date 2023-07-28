@@ -1,0 +1,36 @@
+package api;
+
+import base.BaseAPITest;
+import org.testng.annotations.Test;
+import utils.ApiUtils;
+import utils.Header;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
+
+public class UserApiTest extends BaseAPITest {
+
+    @Test
+    public void testGetUserById() throws IOException, URISyntaxException {
+        String apiBaseUrl = config.getProperty("api.base.url");
+        String userId = "1";
+        String apiUrl = apiBaseUrl + "/users/" + userId;
+
+        // Create headers list (if needed)
+        List<Header> headers = new ArrayList<>();
+        headers.add(new Header("Authorization", "Bearer your-access-token"));
+
+        // Send GET request to the API and get the response
+        UserApiResponse userResponse = ApiUtils.sendGetRequest(apiUrl, headers, UserApiResponse.class);
+
+        // Perform assertions or other operations with the response object
+        // For example:
+        assert userResponse != null;
+        assert userResponse.getId() == 1;
+        System.out.println("User ID: " + userResponse.getId());
+        System.out.println("User Name: " + userResponse.getName());
+        System.out.println("User Email: " + userResponse.getEmail());
+    }
+}
