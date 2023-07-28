@@ -1,0 +1,17 @@
+public BaseAPITest() {
+        config = loadProperties("config.properties");
+    }
+
+    protected Properties loadProperties(String filePath) {
+        Properties properties = new Properties();
+        try (InputStream is = BaseAPITest.class.getClassLoader().getResourceAsStream(filePath)) {
+            if (is != null) {
+                properties.load(is);
+            } else {
+                throw new IOException("Unable to find the configuration file: " + filePath);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return properties;
+    }
