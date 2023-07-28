@@ -1,0 +1,30 @@
+package base;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Properties;
+import org.apache.http.client.HttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.testng.annotations.BeforeClass;
+
+public class BaseAPITest {
+    protected HttpClient httpClient;
+    protected Properties config;
+
+    @BeforeClass
+    public void setUp() {
+        config = loadProperties("src/resources/config.properties");
+
+        httpClient = HttpClients.createDefault();
+    }
+
+    protected Properties loadProperties(String filePath) {
+        Properties properties = new Properties();
+        try (FileInputStream fis = new FileInputStream(filePath)) {
+            properties.load(fis);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return properties;
+    }
+}
