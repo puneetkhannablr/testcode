@@ -1,0 +1,2 @@
+  .interpolator(d3.interpolateRgb("#58D68D", "#EC7063"));
+ .attr("fill", (d) => colorScale(d.count))
