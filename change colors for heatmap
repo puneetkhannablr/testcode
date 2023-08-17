@@ -1,2 +1,10 @@
   .interpolator(d3.interpolateRgb("#58D68D", "#EC7063"));
  .attr("fill", (d) => colorScale(d.count))
+
+
+ .interpolator(d3.interpolateRdYlGn);
+.attr("fill", (d) => {
+        if (d.count < 50) return "#82E0AA";
+        else if (d.count >= 50 && d.count <= 70) return "#F4D03F";
+        else return "#EC7063";
+      })
