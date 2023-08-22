@@ -1,0 +1,67 @@
+card
+
+import React from "react";
+import { Card, CardContent, Typography } from "@mui/material";
+import GaugeChart from "react-gauge-chart";
+import LinearProgress from "@mui/material/LinearProgress";
+
+const errorBudgetData = [
+  { id: 1, remaining: 70, duration: "1 D" },
+  { id: 4, remaining: 90, duration: "3 Months" },
+  { id: 4, remaining: 90, duration: "6 Months" },
+  { id: 4, remaining: 90, duration: "1 Year" },
+  // Add more data here for additional cards
+];
+
+const ErrorBudgetCard = ({ remaining }) => {
+  const needleColor = remaining > 50 ? "#ff0000" : "#00f";
+
+  return (
+    <Card sx={{ width: 300, margin: "10px" }}>
+      <CardContent sx={{ display: "flex", justifyContent: "space-between" }}>
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          sx={{ marginRight: "20px", marginLeft: "0px", fontSize: "14px" }}
+        >
+          Error Budget 2%
+        </Typography>
+
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          sx={{ marginLeft: "20px", fontSize: "14px" }}
+        >
+          Remaining 0.5%
+        </Typography>
+      </CardContent>
+
+      <div>
+        <LinearProgress variant="determinate" value={remaining} />
+      </div>
+      <CardContent>
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          sx={{ marginRight: "1px", fontSize: "14px" }}
+        >
+          Adherence 2%
+        </Typography>
+      </CardContent>
+    </Card>
+  );
+};
+
+const CardExample = () => {
+  return (
+    <div
+      style={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}
+    >
+      {errorBudgetData.map((data) => (
+        <ErrorBudgetCard key={data.id} remaining={data.remaining} />
+      ))}
+    </div>
+  );
+};
+
+export default CardExample;
