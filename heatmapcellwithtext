@@ -1,0 +1,197 @@
+import React, { useEffect, useRef, useState } from "react";
+import * as d3 from "d3";
+
+const App = () => {
+  const heatmapRef = useRef(null); // Reference to the heatmap SVG container
+  const [selectedData, setSelectedData] = useState(null); // State to store selected data
+
+  useEffect(() => {
+    // Fetch data from the API when the component mounts
+    fetch("http://localhost:8080/company/datapoints")
+      .then((response) => response.json())
+      .then((data) => {
+        renderHeatmap(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, []);
+
+  const renderHeatmap = (data) => {
+    // Process data for the heatmap
+    const heatmapData = data.map((item) => ({
+      date: new Date(item.date),
+      count: item.count,
+    }));
+
+    // Define dimensions for the heatmap
+    const height = 400;
+    const cellSize = 20;
+    const padding = 50;
+
+    // Get the minimum and maximum dates from the data
+    const minDate = d3.min(heatmapData, (d) => d.date);
+    const maxDate = d3.max(heatmapData, (d) => d.date);
+
+    // Generate an array of all months between the minDate and maxDate
+    const allMonths = d3.timeMonths(
+      d3.timeMonth.floor(minDate),
+      d3.timeMonth.ceil(maxDate)
+    );
+
+    const uniqueMonths = [];
+    const monthSet = new Set();
+    allMonths.forEach((month) => {
+      const monthName = d3.timeFormat("%b")(month);
+      if (!monthSet.has(monthName)) {
+        monthSet.add(monthName);
+        uniqueMonths.push(month);
+      }
+    });
+
+    // Group the data by month
+    const dataByMonth = d3.groups(heatmapData, (d) => d.date.getMonth());
+
+    // Create a scale for the color of the heatmap
+    const colorScale = d3
+      .scaleSequential()
+      .domain([0, d3.max(heatmapData, (d) => d.count)])
+      .interpolator(d3.interpolateRdYlGn);
+
+    // Calculate the width of the heatmap based on the number of columns
+    const numColumns = Math.ceil(
+      d3.timeWeek.count(d3.timeMonth.floor(minDate), d3.timeMonth.ceil(maxDate))
+    );
+    const width = numColumns * cellSize + padding * 2;
+
+    // Create the SVG container
+    const svg = d3
+      .select(heatmapRef.current)
+      .append("svg")
+      .attr("width", width)
+      .attr("height", height);
+
+    // Add headers for each month
+    svg
+      .append("g")
+      .attr("class", "month-headers")
+      .selectAll(".month-header")
+      .data(allMonths)
+      .enter()
+      .append("text")
+      .attr("class", "month-header")
+      .text((d) => d3.timeFormat("%b")(d)) // Format the month using d3.timeFormat
+      .attr("x", (d, i) => {
+        const monthStartX =
+          d3.timeWeek.count(d3.timeYear(d), d) * cellSize + padding;
+        const monthEndX =
+          d3.timeWeek.count(d3.timeYear(d), d3.timeMonth.offset(d, 1)) *
+            cellSize +
+          padding;
+        return (monthStartX + monthEndX) / 2; // Center the month name in the cell
+      })
+      .attr("y", padding / 2 - cellSize / 2) // Position above the heatmap cells
+      .style("text-anchor", "middle") // Center the text horizontally
+      .style("font-size", "10px")
+      .style("fill", "#444");
+
+    // Create the heatmap cells
+    const cells = svg
+      .selectAll(".cell")
+      .data(dataByMonth)
+      .enter()
+      .append("g")
+      .attr("class", "month-group")
+      .selectAll(".cell")
+      .data((d) => d[1])
+      .enter()
+      .append("g") // Create a group for each cell
+      .attr("class", "cell-group")
+      .attr(
+        "transform",
+        (d) =>
+          `translate(${
+            d3.timeWeek.count(d3.timeYear(d.date), d.date) * cellSize + padding
+          }, ${d.date.getDay() * cellSize + padding})`
+      );
+
+    // Add rectangles to represent each cell
+    cells
+      .append("rect")
+      .attr("width", cellSize)
+      .attr("height", cellSize)
+      .attr("fill", (d) => {
+        if (d.count < 50) return "#82E0AA";
+        else if (d.count >= 50 && d.count <= 70) return "#F4D03F";
+        else return "#EC7063";
+      })
+      .on("mouseover", function (event, d) {
+        const tooltip = d3.select(".tooltip");
+        tooltip
+          .style("display", "block")
+          .style("left", width / 2 + "px")
+          .style("top", padding / 2 + "px")
+          .html(`Date: ${d.date.toDateString()}<br/>Count: ${d.count}`);
+      })
+      .on("mouseout", function () {
+        d3.select(".tooltip").style("display", "none");
+      })
+      .on("click", function (event, d) {
+        handleCellClick(d);
+      });
+
+    // Add text for count inside each cell
+    cells
+      .filter((d) => d.count > 50)
+      .append("text")
+      .attr("x", cellSize / 2)
+      .attr("y", cellSize / 2)
+      .attr("dy", "0.32em") // Vertical alignment
+      .style("text-anchor", "middle") // Center the text horizontally
+      .style("font-size", "10px")
+      .style("fill", "#fff")
+      .text((d) => d.count);
+
+    // Rest of your D3 code...
+  };
+
+  const handleCellClick = (dataPoint) => {
+    // Update the state with the selected data for rendering on the page
+    setSelectedData(dataPoint);
+
+    // Clear selectedData after 5 seconds
+    setTimeout(() => {
+      setSelectedData(null);
+    }, 10000);
+  };
+
+  return (
+    <div>
+      <div
+        style={{
+          textAlign: "center",
+          fontSize: "20px", // Changed from "2" to "20px"
+          fontFamily: "sans-serif", // Using a basic sans-serif font
+          marginTop: "20px",
+        }}
+      >
+        {selectedData
+          ? `Selected Date details are : ${selectedData.date.toDateString()}, Count of tickets : ${
+              selectedData.count
+            }`
+          : ""}
+      </div>
+      <div
+        ref={heatmapRef}
+        style={{
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      ></div>
+    </div>
+  );
+};
+
+export default App;
