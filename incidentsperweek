@@ -1,0 +1,17 @@
+
+To create a JPA repository method that returns the count of incidents per week based on java.util.Date (assuming you have a JPA entity class representing your table), you can use the following code:
+
+java
+Copy code
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import java.util.Date;
+import java.util.List;
+
+public interface IncidentRepository extends JpaRepository<Incident, Long> {
+
+    @Query(value = "SELECT DATE_TRUNC('week', i.start_time), COUNT(i) " +
+                   "FROM Incident i " +
+                   "GROUP BY DATE_TRUNC('week', i.start_time) " +
+                   "ORDER BY DATE_TRUNC('week', i.start_time)")
+    List<Object[]> countIncidentsPerWeek();
