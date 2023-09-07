@@ -1,0 +1,164 @@
+import "./styles.css";
+import React, { useState } from "react";
+import {
+  ComposedChart,
+  Bar,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Switch from "@mui/material/Switch";
+
+const data = [
+  {
+    name: "Page A",
+    uv: 4000,
+    pv: 2400,
+    amt: 2400,
+  },
+  {
+    name: "Page B",
+    uv: 3000,
+    pv: 1398,
+    amt: 2210,
+  },
+  {
+    name: "Page C",
+    uv: 2000,
+    pv: 9800,
+    amt: 2290,
+  },
+  {
+    name: "Page D",
+    uv: 2780,
+    pv: 3908,
+    amt: 2000,
+  },
+  {
+    name: "Page E",
+    uv: 1890,
+    pv: 4800,
+    amt: 2181,
+  },
+  {
+    name: "Page F",
+    uv: 2390,
+    pv: 3800,
+    amt: 2500,
+  },
+  {
+    name: "Page G",
+    uv: 3490,
+    pv: 4300,
+    amt: 2100,
+  },
+];
+
+const amtColor = "#AED6F1"; // Custom color for AMT
+const uvcolor = "#8884d8"; // Custom color for AMT
+const pvcolor = "#82ca9d"; // Custom color for AMT
+
+export default function ChartComponent() {
+  const [showUV, setShowUV] = useState(true);
+  const [showPV, setShowPV] = useState(true);
+  const [showAmt, setShowAmt] = useState(true);
+
+  const handleToggleUV = () => {
+    setShowUV(!showUV);
+  };
+
+  const handleTogglePV = () => {
+    setShowPV(!showPV);
+  };
+
+  const handleToggleAmt = () => {
+    setShowAmt(!showAmt);
+  };
+
+  return (
+    <div className="chart-container">
+      <ResponsiveContainer width="90%" height={500}>
+        <ComposedChart
+          data={data}
+          margin={{
+            top: 10,
+            right: 30,
+            left: 0,
+            bottom: 30,
+          }}
+        >
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="name" />
+          <YAxis yAxisId="left" />
+          <YAxis yAxisId="right" orientation="right" />
+          <Tooltip />
+          <Legend />
+          {showUV && (
+            <Line
+              type="monotone"
+              dataKey="uv"
+              yAxisId="right"
+              name="UV"
+              stroke="#8884d8"
+            />
+          )}
+          {showPV && (
+            <Line
+              type="monotone"
+              dataKey="pv"
+              yAxisId="right"
+              name="PV"
+              stroke="#82ca9d"
+            />
+          )}
+          {showAmt && (
+            <Bar
+              dataKey="amt"
+              barSize={20}
+              yAxisId="left"
+              name="AMT"
+              fill={amtColor}
+            />
+          )}
+        </ComposedChart>
+      </ResponsiveContainer>
+      <div className="chart-options">
+        <FormControlLabel
+          control={
+            <Switch
+              checked={showUV}
+              onChange={handleToggleUV}
+              style={{ color: amtColor }}
+            />
+          }
+          label="Show UV"
+        />
+        <FormControlLabel
+          control={
+            <Switch
+              checked={showPV}
+              onChange={handleTogglePV}
+              style={{ color: pvcolor }}
+            />
+          }
+          label="Show PV"
+        />
+        <FormControlLabel
+          control={
+            <Switch
+              checked={showAmt}
+              onChange={handleToggleAmt}
+              style={{ color: uvcolor }}
+            />
+          }
+          label="Show AMT"
+        />
+      </div>
+    </div>
+  );
+}
