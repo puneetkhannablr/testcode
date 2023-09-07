@@ -1,0 +1,41 @@
+/* Center the chart and options */
+.chart-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin: 0 auto;
+}
+
+/* Style the chart options */
+.chart-options {
+  margin-top: 20px;
+}
+
+.chart-options label {
+  margin-right: 10px;
+}
+
+/* Style the legend */
+.recharts-legend {
+  margin-top: 10px;
+}
+
+/* Style the tooltip */
+.recharts-tooltip {
+  background-color: rgba(255, 255, 255, 0.9);
+  border: 1px solid #ccc;
+  padding: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Style the tooltip label */
+.recharts-tooltip-label {
+  font-weight: bold;
+}
+
+/* Style the tooltip value */
+.recharts-tooltip-item-value {
+  color: #888;
+}
