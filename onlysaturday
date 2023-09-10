@@ -141,3 +141,10 @@ public interface IncidentRepository extends JpaRepository<Incident, Long> {
     List<Map<String, Object>> countIncidentsByWeekFromDate(@Param("startDate") ZonedDateTime startDate);
 }
 
+
+
+ @Query(value = "SELECT TRUNC((i.incidentStartTime - :startDate) / 7) AS weekDiff, COUNT(i.id) AS incidentCount " +
+           "FROM Incident i " +
+           "WHERE i.incidentStartTime >= :startDate " +
+           "GROUP BY TRUNC((i.incidentStartTime - :startDate) / 7) " +
+           "HAVING weekDiff BETWEEN 0 AND 3", nativeQuery = true)
