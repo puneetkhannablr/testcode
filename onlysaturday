@@ -103,3 +103,12 @@ public class DateConversion {
         return dateObjects;
     }
 }
+
+
+
+@Query("SELECT FLOOR((TRUNC(i.incidentStartTime) - TRUNC(:startDate)) / 7) AS weekDiff, COUNT(i) AS incidentCount " +
+           "FROM Incident i " +
+           "WHERE i.incidentStartTime >= :startDate " +
+           "GROUP BY weekDiff " +
+           "HAVING weekDiff BETWEEN 0 AND 3")
+    List<Map<String, Object>> countIncidentsByWeekFromDate(@Param("startDate") ZonedDateTime startDate);
