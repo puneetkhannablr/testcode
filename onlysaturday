@@ -25,4 +25,21 @@ public interface IncidentRepository extends JpaRepository<Incident, Long> {
     List<Object[]> countIncidentsReportedWithin7DaysFromDate(@Param("startDate") ZonedDateTime startDate);
 }
 
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import java.time.ZonedDateTime;
+import java.util.List;
+import java.util.Map;
+
+public interface IncidentRepository extends JpaRepository<Incident, Long> {
+
+    @Query("SELECT DATEPART(wk, i.incidentStartTime) - DATEPART(wk, :startDate) AS weekDiff, COUNT(i) AS incidentCount " +
+           "FROM Incident i " +
+           "WHERE i.incidentStartTime >= :startDate " +
+           "GROUP BY weekDiff " +
+           "HAVING weekDiff BETWEEN 0 AND 3")
+    List<Map<String, Object>> countIncidentsByWeekFromDate(@Param("startDate") ZonedDateTime startDate);
+}
 
