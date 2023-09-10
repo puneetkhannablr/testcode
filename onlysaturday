@@ -14,3 +14,15 @@
            "HAVING COUNT(*) > 0")
     List<ZonedDateTime> findDatesWithIncidentsOnWeekend();
 
+
+
+
+next week's data
+
+public interface IncidentRepository extends JpaRepository<Incident, Long> {
+
+    @Query("SELECT i.incidentStartTime AS startDate, COUNT(i) AS incidentCount FROM Incident i WHERE i.incidentStartTime BETWEEN :startDate AND (DATEADD(day, 7, :startDate)) GROUP BY i.incidentStartTime")
+    List<Object[]> countIncidentsReportedWithin7DaysFromDate(@Param("startDate") ZonedDateTime startDate);
+}
+
+
