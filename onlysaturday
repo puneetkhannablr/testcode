@@ -65,4 +65,41 @@ public interface IncidentRepository extends JpaRepository<Incident, Long> {
     List<Map<String, Object>> countIncidentsByWeekFromDate(@Param("startDate") ZonedDateTime startDate);
 }
 
+============
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
+public class DateConversion {
+    public static void main(String[] args) {
+        List<String> stringDates = new ArrayList<>();
+        stringDates.add("2023-07-16");
+        stringDates.add("2023-08-20");
+        // Add more string dates as needed
+
+        List<Date> dateObjects = convertStringDatesToDateObjects(stringDates);
+
+        for (Date date : dateObjects) {
+            System.out.println(date);
+        }
+    }
+
+    public static List<Date> convertStringDatesToDateObjects(List<String> stringDates) {
+        List<Date> dateObjects = new ArrayList<>();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+        for (String dateString : stringDates) {
+            try {
+                Date date = dateFormat.parse(dateString);
+                dateObjects.add(date);
+            } catch (ParseException e) {
+                // Handle the parsing exception if necessary
+                e.printStackTrace();
+            }
+        }
+
+        return dateObjects;
+    }
+}
