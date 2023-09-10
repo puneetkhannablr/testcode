@@ -3,3 +3,14 @@
            "AND (SELECT COUNT(incident) FROM Incident incident " +
            "      WHERE DAYOFWEEK(incident.incidentStartTime) IN (1, 7)) > 0")
     List<LocalDate> getSaturdayDatesWithIncidents();
+
+
+
+@Query("SELECT DISTINCT DATE_TRUNC('DAY', i.incidentStartTime) AS incidentDate " +
+           "FROM Incident i " +
+           "WHERE (i.incidentStartTime >= :sixMonthsAgo AND i.incidentStartTime <= :now) " +
+           "AND (EXTRACT(DOW FROM i.incidentStartTime) = 6 OR EXTRACT(DOW FROM i.incidentStartTime) = 0) " +
+           "GROUP BY incidentDate " +
+           "HAVING COUNT(*) > 0")
+    List<ZonedDateTime> findDatesWithIncidentsOnWeekend();
+
