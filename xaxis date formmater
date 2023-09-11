@@ -1,0 +1,5 @@
+const formatDate = (date) => {
+  // Format the date to display it vertically
+  const parts = date.split('-');
+  return parts[0] + '\n' + parts[1] + '-' + parts[2];
+};
