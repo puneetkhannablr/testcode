@@ -1,0 +1,68 @@
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
+
+const ChartComponent = () => {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    // Fetch data from the API
+    axios.get('your-api-url-here')
+      .then(response => {
+        setData(response.data['Weekly trends']);
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+      });
+  }, []);
+
+  const renderRedDots = () => {
+    return data.map(item => {
+      if (item.includesReleaseDate === 'true') {
+        return (
+          <circle
+            key={item.weekstartdate}
+            cx={xAxisTickFormatter(item.weekstartdate)}
+            cy={100} // Adjust the Y-coordinate as needed
+            r={5}   // Adjust the radius as needed
+            fill="red"
+            onMouseOver={() => handleMouseOver(item)}
+            onMouseOut={() => handleMouseOut()}
+          />
+        );
+      }
+      return null;
+    });
+  };
+
+  const handleMouseOver = (item) => {
+    // Show Releasedate value in a tooltip or some other way
+    console.log('Releasedate:', item.Releasedate);
+  };
+
+  const handleMouseOut = () => {
+    // Hide tooltip or perform any other necessary actions
+  };
+
+  const xAxisTickFormatter = (tick) => {
+    // Format the tick as needed, e.g., "23-09-7" to "23-09-2023"
+    // You can use a library like date-fns for date formatting
+    // Example: return format(parse(tick, 'dd-MM-yy', new Date()), 'dd-MM-yyyy');
+    return tick;
+  };
+
+  return (
+    <div>
+      <LineChart width={800} height={400} data={data}>
+        <XAxis dataKey="weekstartdate" tickFormatter={xAxisTickFormatter} />
+        <YAxis />
+        <CartesianGrid />
+        <Line type="monotone" dataKey="tickets" stroke="blue" />
+        {renderRedDots()}
+        <Tooltip />
+      </LineChart>
+    </div>
+  );
+};
+
+export default ChartComponent;
