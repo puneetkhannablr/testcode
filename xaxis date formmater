@@ -4,3 +4,4 @@ const formatDate = (date) => {
   return parts[0] + '\n' + parts[1] + '-' + parts[2];
 };
 tickFormatter={(date) => formatDate(date)} 
+<Legend content={() => null} /> {/* Hide the legend item text */}
