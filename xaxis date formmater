@@ -3,3 +3,4 @@ const formatDate = (date) => {
   const parts = date.split('-');
   return parts[0] + '\n' + parts[1] + '-' + parts[2];
 };
+tickFormatter={(date) => formatDate(date)} 
