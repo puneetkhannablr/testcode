@@ -1,0 +1,19 @@
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import java.util.List;
+
+public interface IncidentRepository extends JpaRepository<Incident, Long> {
+
+    @Query(nativeQuery = true, value =
+        "SELECT " +
+        "   TRUNC(incidentStartTime - (TO_NUMBER(TO_CHAR(incidentStartTime, 'D')) - 2)) AS weekstart, " +
+        "   COUNT(id) AS count " +
+        "FROM " +
+        "   incident " +
+        "GROUP BY " +
+        "   TRUNC(incidentStartTime - (TO_NUMBER(TO_CHAR(incidentStartTime, 'D')) - 2)) " +
+        "ORDER BY " +
+        "   weekstart"
+    )
+    List<Object[]> countIncidentsPerWeek();
+}
