@@ -1,0 +1,48 @@
+import React from "react";
+import {
+  ComposedChart,
+  Line,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  Cell,
+} from "recharts";
+
+const apiResponse = [
+  { date: "2023-09-01", isReleaseWeek: true, issues: 2, fixes: 5 },
+  { date: "2023-09-08", isReleaseWeek: false, issues: 3, fixes: 7 },
+  // Add more data points as needed
+];
+
+const Chart = () => {
+  return (
+    <div>
+      <h1>Issues and Fixes Chart</h1>
+      <ComposedChart width={800} height={400} data={apiResponse}>
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="date" />
+        <YAxis />
+        <Tooltip />
+        <Legend />
+
+        {/* Line chart for issues */}
+        <Line type="monotone" dataKey="issues" name="Issues" stroke="#8884d8" />
+
+        {/* Bar chart for fixes */}
+        <Bar dataKey="fixes" name="Fixes" barSize={10}>
+          {apiResponse.map((entry, index) => (
+            <Cell
+              key={`cell-${index}`}
+              fill={entry.isReleaseWeek ? "red" : "green"}
+            />
+          ))}
+        </Bar>
+      </ComposedChart>
+    </div>
+  );
+};
+
+export default Chart;
