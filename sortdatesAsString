@@ -1,0 +1,15 @@
+ List<Map.Entry<String, Person>> entryList = new ArrayList<>(unsortedMap.entrySet());
+        
+        // Sort the list based on date strings
+        entryList.sort(Comparator.comparing(Map.Entry::getKey));
+        
+        // Create a new sorted map and populate it with the sorted entries
+        Map<String, Person> sortedMap = new LinkedHashMap<>();
+        for (Map.Entry<String, Person> entry : entryList) {
+            sortedMap.put(entry.getKey(), entry.getValue());
+        }
+        
+        // Print the sorted map
+        for (Map.Entry<String, Person> entry : sortedMap.entrySet()) {
+            System.out.println("Date: " + entry.getKey() + ", Person: " + entry.getValue().getName());
+        }
