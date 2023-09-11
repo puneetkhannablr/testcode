@@ -1,0 +1,104 @@
+import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
+
+public class MatrixStatistics {
+    public static void main(String[] args) {
+        int[][] matrix = {
+            {5, 2, 9, 8},
+            {1, 7, 4, 3},
+            {6, 3, 8, 5}
+        };
+
+        int numRows = matrix.length;
+        int numCols = matrix[0].length;
+
+        // Initialize DescriptiveStatistics objects for each column
+        DescriptiveStatistics firstweekStats = new DescriptiveStatistics();
+        DescriptiveStatistics secondweekStats = new DescriptiveStatistics();
+        DescriptiveStatistics thirdweekStats = new DescriptiveStatistics();
+        DescriptiveStatistics fourthweekStats = new DescriptiveStatistics();
+
+        for (int i = 0; i < numRows; i++) {
+            firstweekStats.addValue(matrix[i][0]); // "firstweek" column
+            secondweekStats.addValue(matrix[i][1]); // "secondweek" column
+            thirdweekStats.addValue(matrix[i][2]); // "thirdweek" column
+            fourthweekStats.addValue(matrix[i][3]); // "fourthweek" column
+        }
+
+        // Calculate statistics for each column
+        double meanFirstWeek = firstweekStats.getMean();
+        double meanSecondWeek = secondweekStats.getMean();
+        double meanThirdWeek = thirdweekStats.getMean();
+        double meanFourthWeek = fourthweekStats.getMean();
+
+        double stdDevFirstWeek = firstweekStats.getStandardDeviation();
+        double stdDevSecondWeek = secondweekStats.getStandardDeviation();
+        double stdDevThirdWeek = thirdweekStats.getStandardDeviation();
+        double stdDevFourthWeek = fourthweekStats.getStandardDeviation();
+
+        double minFirstWeek = firstweekStats.getMin();
+        double minSecondWeek = secondweekStats.getMin();
+        double minThirdWeek = thirdweekStats.getMin();
+        double minFourthWeek = fourthweekStats.getMin();
+
+        double maxFirstWeek = firstweekStats.getMax();
+        double maxSecondWeek = secondweekStats.getMax();
+        double maxThirdWeek = thirdweekStats.getMax();
+        double maxFourthWeek = fourthweekStats.getMax();
+
+        // Determine which column has the highest and lowest average
+        String columnWithMaxAverage = "";
+        String columnWithMinAverage = "";
+
+        double maxAverage = Math.max(meanFirstWeek, Math.max(meanSecondWeek, Math.max(meanThirdWeek, meanFourthWeek)));
+        double minAverage = Math.min(meanFirstWeek, Math.min(meanSecondWeek, Math.min(meanThirdWeek, meanFourthWeek)));
+
+        if (maxAverage == meanFirstWeek) {
+            columnWithMaxAverage = "firstweek";
+        } else if (maxAverage == meanSecondWeek) {
+            columnWithMaxAverage = "secondweek";
+        } else if (maxAverage == meanThirdWeek) {
+            columnWithMaxAverage = "thirdweek";
+        } else if (maxAverage == meanFourthWeek) {
+            columnWithMaxAverage = "fourthweek";
+        }
+
+        if (minAverage == meanFirstWeek) {
+            columnWithMinAverage = "firstweek";
+        } else if (minAverage == meanSecondWeek) {
+            columnWithMinAverage = "secondweek";
+        } else if (minAverage == meanThirdWeek) {
+            columnWithMinAverage = "thirdweek";
+        } else if (minAverage == meanFourthWeek) {
+            columnWithMinAverage = "fourthweek";
+        }
+
+        // Print statistics for each column
+        System.out.println("Statistics for firstweek:");
+        System.out.println("Mean: " + meanFirstWeek);
+        System.out.println("Standard Deviation: " + stdDevFirstWeek);
+        System.out.println("Minimum: " + minFirstWeek);
+        System.out.println("Maximum: " + maxFirstWeek);
+
+        System.out.println("Statistics for secondweek:");
+        System.out.println("Mean: " + meanSecondWeek);
+        System.out.println("Standard Deviation: " + stdDevSecondWeek);
+        System.out.println("Minimum: " + minSecondWeek);
+        System.out.println("Maximum: " + maxSecondWeek);
+
+        System.out.println("Statistics for thirdweek:");
+        System.out.println("Mean: " + meanThirdWeek);
+        System.out.println("Standard Deviation: " + stdDevThirdWeek);
+        System.out.println("Minimum: " + minThirdWeek);
+        System.out.println("Maximum: " + maxThirdWeek);
+
+        System.out.println("Statistics for fourthweek:");
+        System.out.println("Mean: " + meanFourthWeek);
+        System.out.println("Standard Deviation: " + stdDevFourthWeek);
+        System.out.println("Minimum: " + minFourthWeek);
+        System.out.println("Maximum: " + maxFourthWeek);
+
+        // Print the column with the highest and lowest average
+        System.out.println("Column with Highest Average: " + columnWithMaxAverage);
+        System.out.println("Column with Lowest Average: " + columnWithMinAverage);
+    }
+}
