@@ -1,0 +1,21 @@
+import React from 'react';
+
+const CenteredDiv = () => {
+  const centeredDivStyle = {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    minHeight: '100vh', // This sets the minimum height to the full viewport height
+  };
+
+  return (
+    <div style={centeredDivStyle}>
+      <div>
+        {/* Your content goes here */}
+        <h1>Hello, Centered Div!</h1>
+      </div>
+    </div>
+  );
+};
+
+export default CenteredDiv;
