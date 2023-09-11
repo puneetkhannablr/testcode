@@ -1,0 +1,14 @@
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+
+import java.time.ZonedDateTime;
+import java.util.List;
+
+public interface IncidentRepository extends JpaRepository<Incident, Long> {
+
+    @Query("SELECT NEXT_DAY(TRUNC(i.incidentStartTime) - 6, 'SUNDAY') AS weekstart, COUNT(i.id) AS count " +
+           "FROM Incident i " +
+           "GROUP BY NEXT_DAY(TRUNC(i.incidentStartTime) - 6, 'SUNDAY') " +
+           "ORDER BY weekstart")
+    List<Object[]> countIncidentsPerWeek();
+}
