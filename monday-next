@@ -1,0 +1,20 @@
+ Calendar calendar = Calendar.getInstance();
+        // Get the current day of the week (Sunday = 1, Monday = 2, ..., Saturday = 7)
+        int currentDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+        
+        if (currentDayOfWeek == Calendar.MONDAY) {
+            // If today is Monday, pick today
+            return calendar.getTime();
+        } else {
+            // Calculate the number of days until the next Monday
+            int daysUntilNextMonday = Calendar.MONDAY - currentDayOfWeek;
+            if (daysUntilNextMonday <= 0) {
+                daysUntilNextMonday += 7; // If today is later in the week, add 7 to get the next Monday
+            }
+            
+            // Add the days to the current date
+            calendar.add(Calendar.DAY_OF_MONTH, daysUntilNextMonday);
+            
+            // Get the resulting date
+            return calendar.getTime();
+        }
