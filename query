@@ -1,0 +1,2 @@
+UPDATE your_table_name
+SET date_column = date_column + INTERVAL 7 DAY;
