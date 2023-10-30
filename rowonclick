@@ -1,0 +1,28 @@
+ const [selectedName, setSelectedName] = useState(null);
+
+  const handleRowClick = (row) => {
+    setSelectedName(row.original.name);
+  };
+
+  const closePopup = () => {
+    setSelectedName(null);
+  };
+
+  return (
+    <div>
+      <ReactTable
+        data={data}
+        columns={columns}
+        getTrProps={(state, rowInfo) => {
+          if (rowInfo) {
+            return {
+              onClick: () => handleRowClick(rowInfo),
+              style: {
+                cursor: 'pointer',
+              },
+            };
+          }
+          return {};
+        }}
+        showPagination={false}
+      />
