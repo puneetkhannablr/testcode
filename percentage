@@ -1,0 +1,11 @@
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+public interface EntityNameRepository extends JpaRepository<EntityName, Long> {
+    
+    @Query(value = "SELECT e.name, (e.count / total_count) * 100 " +
+           "FROM EntityName e, (SELECT SUM(count) AS total_count FROM EntityName WHERE date = :date) t " +
+           "WHERE e.date = :date", nativeQuery = true)
+    List<Object[]> findSharePercentageByNameAndDate(@Param("date") Date date);
+}
